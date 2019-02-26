@@ -1,0 +1,325 @@
+---
+title: "R ISLR"
+author: "Avinash Sooriyarachchi"
+date: "1/25/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+This is just a rmd file to refresh my memory of coursework taught by Andreas Buja and Linda Zhao
+
+```{r}
+x <- c(1,2,3)
+x
+```
+
+```{r}
+length(x)
+y <- c(1,2,3)
+length(y)
+```
+
+```{r}
+x+y
+```
+
+```{r}
+ls()
+rm(A, Auto, cylinders, f, fa)
+```
+
+```{r}
+ls()
+```
+
+Remove all objects
+```{r}
+rm(list=ls())
+```
+
+
+```{r}
+ls()
+```
+
+We can learn about certain functions as shown below
+```{r}
+?ls()
+```
+
+
+```{r}
+x <- matrix(data=c(1,2,3,4), nrow=2, ncol=2)
+x
+```
+
+
+```{r}
+y <- matrix(data = c(5,6,7,8),2,2)
+y
+```
+
+```{r}
+z <- matrix(c(12,34,56,78),2,2,byrow=TRUE)
+z
+```
+
+```{r}
+sqrt(z)
+z^2
+```
+
+The rnorm() function generates a vector of random normal variables,
+with first argument n the sample size.
+
+By default, rnorm() creates standard normal random variables with a mean of 0 and a standard deviation of 1
+```{r}
+x = rnorm(50)
+y = x + rnorm(50, mean=50, sd=0.1)
+cor(x, y)
+```
+
+Sometimes we want our code to reproduce the exact same set of random
+numbers; we can use the set.seed() function to do this
+
+```{r}
+set.seed(1400)
+rnorm(50)
+```
+
+mean() and var() functions. Note that var() is just the standard deviation squared.
+
+```{r}
+set.seed(3)
+y = rnorm(100)
+mean(y)
+var(y)
+sqrt(var(y))
+sd(y)
+```
+
+Plotting stuff in R 
+```{r}
+x= rnorm(100)
+y = rnorm(100)
+plot(x,y)
+```
+
+```{r}
+plot(x,y, xlab = "This is the x-axis", ylab = "This is the y-axis", main = 'X vs Y plot')
+```
+
+
+```{r}
+pdf("Figure.pdf")
+plot(x,y,col='green')
+dev.off()
+```
+
+ 
+ 
+```{r}
+x = seq(1,10)
+x
+x <- 1:20
+x
+x = seq(-pi, pi, length = 50)
+x
+```
+
+
+```{r}
+?contour()
+```
+
+Create  contour plot
+```{r}
+y = x
+f = outer(x,y, function(x,y)cos(y)/(1+x^2))
+contour(x,y,f)
+contour(x,y,f,nlevels=45, add=T)
+fa = (f-t(f))/2
+contour(x,y,fa, nlevels = 15)
+```
+
+Let's make a heatmap or a color coded contour map just like in weather forecasts. The arguments theta and phi control the angles at which the plot is viewed.
+```{r}
+image(x,y,fa)
+persp(x,y,fa)
+persp(x,y,fa, theta=30)
+persp(x,y,fa,theta=30, phi=20)
+persp(x,y,fa,theta=30, phi=70)
+persp(x,y,fa,theta=30, phi=40)
+
+```
+
+
+indexing in R
+```{r}
+A <- matrix(c(1:16),4,4)
+A
+```
+
+
+The first number after the open-bracket symbol[
+always refers to the row, and the second number always refers to the column
+```{r}
+A[2,3]
+```
+
+Selecting multiple columns and multiple rows
+```{r}
+A[c(1,3), c(2,4)]
+```
+
+```{r}
+A[c(1:3), c(2:4)]
+
+```
+
+
+
+```{r}
+A[1:2,]
+```
+
+```{r}
+A[ ,1:2]
+```
+
+The use of a negative sign - in the index tells R to keep all rows or columns except those indicated in the index.
+
+```{r}
+A[-c(1,3),]
+```
+
+```{r}
+A[1,]
+```
+
+dim() gives the number of rows followed by the number of rows in a given matrix
+
+```{r}
+dim(A)
+```
+
+Let's import the Auto Data from the proper directory. Always change the .whatever extension in the properties itself
+```{r}
+Auto = read.table('Auto.data')
+View(Auto)
+```
+```{r}
+
+```
+
+This is the same as pwd in the linux terminal
+```{r}
+getwd()
+
+```
+```{r}
+View(Auto)
+```
+
+Loading the data correctly: so correct it. So read the first line as a header and replace ? as na.
+
+```{r}
+Auto = read.table("Auto.data", header = T, na.strings = "?")
+View(Auto)
+dim(Auto)
+```
+
+use the na.omit() function to simply remove these rows
+```{r}
+Auto = na.omit(Auto)
+dim(Auto)
+names(Auto)
+```
+
+
+```{r}
+plot(cylinders, mpg)
+```
+
+
+To refer to a variable, we must type the data set and the variable name
+joined with a $ symbol.
+
+```{r}
+plot(Auto$cylinders, Auto$mpg)
+```
+```{r}
+attach(Auto)
+```
+
+```{r}
+plot(cylinders, mpg)
+```
+
+
+The cylinders variable is stored as a numeric vector, so R has treated it as quantitative. One may prefer to treat it as a qualitative variable.The function converts quantitative variables into qualitative as.factor() variables.
+
+```{r}
+cylinders = as.factor(cylinders)
+```
+
+If the variable plotted on the x-axis is categorial, then boxplots will automatically be produced by the plot() function.
+
+```{r}
+plot(cylinders, mpg)
+plot(cylinders, mpg, col = "red" )
+plot(cylinders, mpg, col = "red", varwidth = T )
+plot(cylinders, mpg, col = "red", varwidth = T, horizontal = T )
+plot(cylinders, mpg, col  = 'red', varwidth = T, xlab = 'cylinders', ylab = 'MPG')
+
+```
+
+```{r}
+hist(mpg)
+hist(mpg, col =2)
+hist(mpg, col=2, breaks=15)
+```
+
+```{r}
+pairs(Auto)
+pairs(~mpg + displacement + horsepower + weight + acceleration, Auto)
+```
+
+
+```{r}
+plot(horsepower, mpg)
+identify(horsepower, mpg, name)
+```
+```{r}
+summary(Auto)
+summary(Auto$mpg)
+```
+
+```{r}
+q()
+
+```
+
