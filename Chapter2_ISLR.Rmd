@@ -1,0 +1,239 @@
+---
+title: "Chapter2_ISLR"
+author: "Avi Sooriyarachchi"
+date: "3/3/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Import the necessary libraries
+```{r}
+library(MASS)
+library(ISLR)
+```
+
+check out the Boston data set from the MASS library
+```{r}
+View(Boston)
+names(Boston)
+```
+
+If you need to learn more about the dataset do the following
+```{r}
+?Boston
+```
+
+Do linear regression with medv as Y and lstat as X
+```{r}
+lm.fit = lm(medv~lstat, data =Boston)
+attach(Boston)
+lm.fit = lm(medv~lstat)
+```
+
+See what was calculated for the linear regression fit (Ordinary Least Squares)
+```{r}
+lm.fit
+```
+
+
+
+This isn't very informative, it is helpful to get a summary as shown below 
+```{r}
+summary(lm.fit)
+```
+
+
+Use names to figure out what else is computed in lm.fit
+```{r}
+names(lm.fit)
+```
+
+```{r}
+coef(lm.fit)
+```
+
+
+Finding a confidence interval for the coefficients of the linear fit, perform the following 
+```{r}
+confint(lm.fit)
+```
+
+To find confidence intervals for a given value of lstat
+```{r}
+attach(Boston)
+predict(lm.fit, data.frame(lstat=c(5,10,15)), interval = "confidence")
+```
+
+```{r}
+predict (lm.fit ,data.frame(lstat=c(5 ,10 ,15) ),interval ="prediction")
+```
+
+We can explore different ways of changing the appearance of the regression plot 
+```{r}
+plot(lstat, medv)
+abline(lm.fit)
+abline(lm.fit, lwd = 3)
+abline(lm.fit, lwd = 3, col = "red")
+plot(lstat, medv, col = "red")
+plot(lstat, medv, pch = 20)
+
+
+```
+
+
+Getting all 4 diagnostic plot at once 
+```{r}
+par(mfrow = c(2,2))
+plot(lm.fit)
+
+```
+
+Getting diagnostic plot using residuals function 
+```{r}
+plot(predict(lm.fit), residuals(lm.fit))
+plot(predict(lm.fit), rstudent(lm.fit))
+```
+Computing Leverage statistics
+```{r}
+plot(hatvalues(lm.fit))
+which.max(hatvalues(lm.fit))
+```
+
+
+Fitting a multiple regrassion line to a given set of data
+```{r}
+lm.fit  = lm(medv~lstat + age, data=Boston)
+summary(lm.fit)
+```
+
+In order to consider all independent variable
+```{r}
+lm.fit = lm(medv~., data = Boston)
+summary(lm.fit)
+```
+
+To examine the presence of multicollinearity in this data, computing VIF is useful. To use this we have to use vif function given in the car package 
+```{r}
+library(car)
+vif(lm.fit)
+```
+
+Running a multiple regression excluding a certain factor
+```{r}
+lm.fit1 = lm(medv~.-age, data = Boston)
+summary(lm.fit1)
+```
+
+
+
+Alternatively, the update() function can be used 
+```{r}
+lm.fit1 = update(lm.fit, ~.-age)
+summary(lm.fit1)
+```
+
+Interaction terms 
+lstat:black is an interaction term between lstat and black.
+However a better way to do this lstat*black <==> lstat + black + lstat:black
+```{r}
+summary(lm(medv~black*lstat, data = Boston))
+```
+
+Wrap the non linear entity in a () in the R formula. An escape chatacter of sorts in this context
+```{r}
+lm.fit2 = lm(medv ~lstat + I(lstat^2))
+summary(lm.fit2)
+```
+
+The anova() function performs a hypothesis
+test comparing the two models. The null hypothesis is that the two models
+fit the data equally well, and the alternative hypothesis is that the full
+model is superior.
+Use anova() function to show how better the quadratic fit is in comparison to the linear fit. 
+```{r}
+lm.fit = lm(medv~lstat)
+anova(lm.fit, lm.fit2)
+```
+
+
+A better approach involves using the poly() function
+poly() to create the polynomial within lm(). For example, the following command
+produces a fifth-order polynomial fit
+
+
+```{r}
+lm.fit5 = lm(medv~poly(lstat, 5))
+summary(lm.fit5)
+```
+
+
+In addition to polynomial trasformations we can use log transformations of the predictor variables
+```{r}
+summary(lm(medv~log(rm), data=Boston))
+```
+
+```{r}
+library(ISLR)
+```
+
+Qualitative predictor variables using the Carseats dataset in R 
+```{r}
+?Carseats
+```
+
+
+```{r}
+
+remove(list = ls())
+
+```
+```{r}
+View(Carseats)
+```
+
+```{r}
+attach(Carseats)
+```
+
+```{r}
+names(Carseats)
+```
+
+R qutomtically generates dummy variables for qualitative variables 
+```{r}
+lm.fit = lm(Sales~.+Income:Advertising+Price:Age, data = Carseats)
+summary(lm.fit)
+```
+
+```{r}
+?contrasts
+```
+
+contrasts() function returns the coding that R uses for the dummy variables
+```{r}
+attach(Carseats)
+contrasts(ShelveLoc)
+```
+
+Writing functions in R
+Let's try to create a Library names LoadLibraries
+```{r}
+LoadLibraries
+LoadLibraries()
+```
+
+```{r}
+LoadLibraries <- function(){
+  library(ISLR)
+  library(MASS)
+  print("The libraries have loaded ")
+}
+```
+
+```{r}
+LoadLibraries()
+```
+
